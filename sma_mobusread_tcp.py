@@ -6,10 +6,12 @@ collected = c.read_holding_registers(42109,4)
 print("Device ID=",collected[3])
 
 #collected = c.read_input_registers(30775,2)
-collected = c.read_input_registers(30513,4)
+collected = c.read_input_registers(30533,4)
 print("total energy produced=",collected)
 collected = c.read_input_registers(30517,4)
 print("total energy produced today =",collected)
+collected = c.read_input_registers(30775,2)
+print("Real time power =",collected)
 
 c.close()
 
