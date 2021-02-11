@@ -1,27 +1,22 @@
 import struct
 from pyModbusTCP.client import ModbusClient
-c= ModbusClient(host="192.168.0.237",unit_id="3",port=502,debug=False)
-c.open()
+Modbus_Device_IP="192.168.0.237"
+Modbus_Device_ID="3"
+Modbus_Device_Port = 502
+SMA_modbus_to_collect = [[30529,2,"Total energy (Wh) produced by system"],[30535,2,"Energy (Wh) produced today"],[30775,2,"Real time power (W) production"] ]
 
-collected = c.read_holding_registers(42109,4)
-print("Device ID=",collected[3])
+def Collect_Modbus(Device_IP, Device_ID, Device_Port, Collect_Array): 
+    c= ModbusClient(host=Device_IP,unit_id=Device_ID,port=Device_Port,debug=False)
+    c.open()
+    collected_array = [0]
+    collected_array.pop()
+    for x in range(len(Collect_Array)):
+        print(x)
+        collected = c.read_input_registers(Collect_Array[x][0],Collect_Array[x][1])
+        collected_merged = struct.pack('>HH',collected[0],collected[1])
+        collected_array.append(struct.unpack('>I', collected_merged)[0])
+        print(collected_array)
+    c.close()
+    return collected_array
 
-#collected = c.read_input_registers(30775,2)
-
-collected = c.read_input_registers(30529,2)
-collected_merged = struct.pack('>HH',collected[0],collected[1])
-print("modbus registers (30529) total energy produced Wh=",collected)
-print("Produced energy in Wh=",struct.unpack('>I', collected_merged)[0])
-#unpack always returns a tuple, even if there is only one element, hence the [0] to select the first element
-
-
-#s = struct.pack('HH',collected[0], collected[1])
-#print(s)
-
-#collected = c.read_input_registers(30517,4)
-#print("total energy produced today =",collected)
-#collected = c.read_input_registers(30775,2) #confirmed
-#print("Real time power =",collected) 
-
-c.close()
-
+print(Collect_Modbus(Modbus_Device_IP, Modbus_Device_ID,Modbus_Device_Port,SMA_modbus_to_collect))
