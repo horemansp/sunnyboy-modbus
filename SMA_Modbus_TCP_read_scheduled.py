@@ -14,10 +14,13 @@ SMA_modbus_to_collect_2 = [[30535,2,"Wh","Real-Time Energy (Wh) produced today"]
 SMA_modbus_to_collect_3 = [[30529,2,"Wh","Total energy (Wh) produced by system"]]
 
 def store_url(sensor, description, value, metric, timestamp):
-    url = savemye_url
-    myobj = {'sensor' : sensor,'description': description, 'value':value, 'metric': metric, 'timestamp':timestamp}
-    x = requests.post(url, data = myobj)
-    print(x)
+    try:
+        url = savemye_url
+        myobj = {'sensor' : sensor,'description': description, 'value':value, 'metric': metric, 'timestamp':timestamp}
+        x = requests.post(url, data = myobj)
+        print(x)
+    except request.RequestException as e:
+        print(e)
 
 def Collect_Modbus(Collect_Array): 
     c= ModbusClient(host=Modbus_Device_IP,unit_id=Modbus_Device_ID,port=Modbus_Device_Port,debug=False)
