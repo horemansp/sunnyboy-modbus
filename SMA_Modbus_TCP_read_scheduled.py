@@ -33,13 +33,10 @@ def Collect_Modbus(Collect_Array):
             collected_array.pop()
             collected = c.read_input_registers(Collect_Array[x][0],Collect_Array[x][1])
             collected_merged = struct.pack('>HH',collected[0],collected[1])
-            collected_array.append(struct.unpack('>I', collected_merged)[0])
+            collected_array.append(struct.unpack('>i', collected_merged)[0])
             #store_url format : (sensor, description, value, metric, timestamp)
-            if collected_array[0] < 2000000: #correct unreasonable readings
-                store_url("SMA",Collect_Array[x][3],collected_array,Collect_Array[x][2],datetime.now())
-                print("SMA",Collect_Array[x][3],collected_array[0],Collect_Array[x][2],datetime.now())
-            else:
-                print("unreasonable value calculated, ignore result")
+            store_url("SMA",Collect_Array[x][3],collected_array,Collect_Array[x][2],datetime.now())
+            print("SMA",Collect_Array[x][3],collected_array[0],Collect_Array[x][2],datetime.now())
         c.close()
     except:
         print("Could not read from modbus")
