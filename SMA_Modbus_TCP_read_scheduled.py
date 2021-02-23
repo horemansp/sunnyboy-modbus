@@ -18,7 +18,7 @@ def store_url(sensor, description, value, metric, timestamp):
         url = savemye_url
         myobj = {'sensor' : sensor,'description': description, 'value':value, 'metric': metric, 'timestamp':timestamp}
         x = requests.post(url, data = myobj)
-        print(x)
+        print(myobj)
     except requests.RequestException as e:
         print(e)
 
@@ -35,8 +35,13 @@ def Collect_Modbus(Collect_Array):
             collected_merged = struct.pack('>HH',collected[0],collected[1])
             collected_array.append(struct.unpack('>i', collected_merged)[0])
             #store_url format : (sensor, description, value, metric, timestamp)
-            store_url("SMA",Collect_Array[x][3],collected_array,Collect_Array[x][2],datetime.now())
-            print("SMA",Collect_Array[x][3],collected_array[0],Collect_Array[x][2],datetime.now())
+            if collected_array[0] < 100000 and collected_array[0] > -100000:
+                store_url("SMA",Collect_Array[x][3],collected_array,Collect_Array[x][2],datetime.now())
+                print("SMA",Collect_Array[x][3],collected_array[0],Collect_Array[x][2],datetime.now())
+            else:
+                store_url("SMA",Collect_Array[x][3],0,Collect_Array[x][2],datetime.now())
+                print("unrealistic value detected set value to 0")
+                
         c.close()
     except:
         print("Could not read from modbus")
