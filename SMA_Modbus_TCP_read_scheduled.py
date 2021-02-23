@@ -19,23 +19,32 @@ def store_url(sensor, description, value, metric, timestamp):
         myobj = {'sensor' : sensor,'description': description, 'value':value, 'metric': metric, 'timestamp':timestamp}
         x = requests.post(url, data = myobj)
         print(x)
-    except request.RequestException as e:
+    except requests.RequestException as e:
         print(e)
 
-def Collect_Modbus(Collect_Array): 
-    c= ModbusClient(host=Modbus_Device_IP,unit_id=Modbus_Device_ID,port=Modbus_Device_Port,debug=False)
-    c.open()
-    
-    for x in range(len(Collect_Array)):
-        collected_array = [0]
-        collected_array.pop()
-        collected = c.read_input_registers(Collect_Array[x][0],Collect_Array[x][1])
-        collected_merged = struct.pack('>HH',collected[0],collected[1])
-        collected_array.append(struct.unpack('>I', collected_merged)[0])
-        #store_url format : (sensor, description, value, metric, timestamp)
-        store_url("SMA",Collect_Array[x][3],collected_array,Collect_Array[x][2],datetime.now())
-        print("SMA",Collect_Array[x][3],collected_array[0],Collect_Array[x][2],datetime.now())
-    c.close()
+def Collect_Modbus(Collect_Array):
+    #todo: add try
+    try:
+        c= ModbusClient(host=Modbus_Device_IP,unit_id=Modbus_Device_ID,port=Modbus_Device_Port,debug=False)
+        c.open()
+        
+        for x in range(len(Collect_Array)):
+            collected_array = [0]
+            collected_array.pop()
+            collected = c.read_input_registers(Collect_Array[x][0],Collect_Array[x][1])
+            collected_merged = struct.pack('>HH',collected[0],collected[1])
+            collected_array.append(struct.unpack('>I', collected_merged)[0])
+            #store_url format : (sensor, description, value, metric, timestamp)
+            if collected_array[0] < 2000000: #correct unreasonable readings
+                store_url("SMA",Collect_Array[x][3],collected_array,Collect_Array[x][2],datetime.now())
+                print("SMA",Collect_Array[x][3],collected_array[0],Collect_Array[x][2],datetime.now())
+            else:
+                print("unreasonable value calculated, ignore result")
+        c.close()
+    except:
+        print("Could not read from modbus")
+        
+        
 ''' schedule examples
 schedule.every(10).seconds.do(job)
 schedule.every(10).minutes.do(job)
