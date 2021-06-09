@@ -22,8 +22,7 @@ telegram_value = ""
 serial_product="FT232R"
 SMA_modbus_to_collect = [[30775,2,"W","Real time power (W) production"]]
 SMA_modbus_to_collect_daily_energy = [[30535,2,"Wh","Total energy (Wh) produced today"]]
-savemye_url = 'http://www.phconsul.com/savemye/api/store.php'
-#savemye_url = 'http://192.168.1.230/savemye/api/store.php'
+savemye_url = 'http://192.168.1.230/savemye/api/store.php'
 #Read DSRM port P1
 #example type: sagemcom T211 3phase P1 type 5b (should also work for S211 single phase)
 def ser_port_to_use(product_name):
