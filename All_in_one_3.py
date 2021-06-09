@@ -15,7 +15,7 @@ debugVICTRON=False
 debugSERIAL=False
 debugURL=False
 url_store_values = True #call URL
-key="sowrd@&-5129"
+key="thestring to connect to the web_API"
 telegram_value = ""
 
 
