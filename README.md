@@ -1,4 +1,4 @@
-# sunnyboy-modbus
+# DSRM T211, sunnyboy5-modbus, Victron battery controller-modbus
 
 Collects:
 - Real time power & dialy energy from a T211 digital smart meter (Belgian) over a serial cable with a RPI4
