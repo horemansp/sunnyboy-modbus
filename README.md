@@ -9,4 +9,5 @@ Calculates
 - real time home consumption (excluding battery)
 Stores
 - Data in mySQL database via a web-API call
+- Examples: https://www.phconsul.com/savemye/graph_rt18.html , https://www.phconsul.com/savemye/voltage1.php
 
